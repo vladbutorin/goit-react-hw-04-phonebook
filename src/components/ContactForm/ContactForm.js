@@ -1,59 +1,57 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Form, Label, Input, Button } from './ContactForm.styled';
 
-class ContactForm extends Component {
-    state = {
-        name: '',
-        number: ''
-    };
+const ContactForm = ({ onAddContact }) => {
+    const [name, setName] = useState('');
+    const [number, setNumber] = useState('');
 
-    handleInputChange = (e) => {
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        if (name === 'name') {
+            setName(value);
+        } else if (name === 'number') {
+            setNumber(value);
+        }
     };
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (this.state.name.trim() === '' || this.state.number.trim() === '') {
+        if (name.trim() === '' || number.trim() === '') {
             alert('Please enter name and phone number');
             return;
         }
 
-        this.props.onAddContact(this.state.name.trim(), this.state.number.trim());
+        onAddContact(name.trim(), number.trim());
 
-        this.setState({
-            name: '',
-            number: ''
-        });
+        setName('');
+        setNumber('');
     };
 
-    render() {
-        return (
-            <Form onSubmit={this.handleSubmit}>
-                <div>
-                    <Label>Name:</Label>
-                    <Input
-                        type="text"
-                        name="name"
-                        value={this.state.name}
-                        onChange={this.handleInputChange}
-                        required
-                    />
+    return (
+        <Form onSubmit={handleSubmit}>
+            <div>
+                <Label>Name:</Label>
+                <Input
+                    type="text"
+                    name="name"
+                    value={name}
+                    onChange={handleInputChange}
+                    required
+                />
 
-                    <Label>Number:</Label>
-                    <Input
-                        type="tel"
-                        name="number"
-                        value={this.state.number}
-                        onChange={this.handleInputChange}
-                        required
-                    />
-                </div>
-                <Button type="submit">Add contact</Button>
-            </Form>
-        );
-    }
-}
+                <Label>Number:</Label>
+                <Input
+                    type="tel"
+                    name="number"
+                    value={number}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+            <Button type="submit">Add contact</Button>
+        </Form>
+    );
+};
 
 export default ContactForm;
